@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container mx-auto   sm:p-6 p-2 bg-slate-100 rounded-lg">
+        <div class="mx-auto   sm:p-6 p-2 bg-slate-50 ">
             <div class="flex flex-row sm:flex-row flex-col items-center">
                 <div class="sm:basis-1/2 ">
                     <div class="flex flex-row items-center">
