@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "v-drag": "^3.0.8",
     "vue": "^3.2.41",
+    "vue-cropperjs": "^5.0.0",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

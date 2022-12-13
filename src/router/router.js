@@ -2,6 +2,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const maincomponent = () => import("../components/maincomponent.vue");
+const login = () => import("../components/login.vue")
 
 const home = () => import("../views/home.vue");
 const editor = () => import("../views/editor.vue");
@@ -25,6 +26,13 @@ const routes = [
                     title : "+ editor"
                 }
                 
+            },
+            {
+                path:"/login",
+                component:login ,
+                meta : {
+                    title:" + login"
+                }
             }
         ]
     }
