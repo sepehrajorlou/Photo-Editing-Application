@@ -10,8 +10,9 @@
         </div>
         <div class="sm:mt-14 mt-6 text-center">
             <button
-                class="bg-sky-300 font-bold sm:text-2xl text-xl  px-6 py-7 rounded-3xl hover:bg-sky-400 sm:w-96 w-80"><router-link to="editor">Let's
-                editing your photo !</router-link></button>
+                class="bg-sky-300 font-bold sm:text-2xl text-xl  px-6 py-7 rounded-3xl hover:bg-sky-400 sm:w-96 w-80"><router-link
+                    to="editor">Let's
+                    editing your photo !</router-link></button>
             <h2 class="text-gray-700 sm:mt-3 mt-1 text-base">Powered by Sepehr Ajorlou</h2>
         </div>
         <div class="mt-7 text-center">
@@ -29,9 +30,12 @@
                 Stay up to date on new products I build at PQINA. <br>
                 Subscribe below, or follow me on Twitter
             </h3>
-            <input class="shadow appearance-none border rounded  sm:w-1/3 w-full  py-2 px-3 text-gray-700 leading-tight  focus:shadow-outline mt-5" id="username" type="email" placeholder="Email" >
+            <input
+                class="shadow appearance-none border rounded  sm:w-1/3 w-full  py-2 px-3 text-gray-700 leading-tight  focus:shadow-outline mt-5"
+                id="username" type="email" placeholder="Email">
         </div>
     </div>
+  
 </template>
 <script>
 

@@ -12,7 +12,7 @@
                         <h2 class="text-base font-bold">crop</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = true) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage()"
+                    <div v-on:click="(cropClass = false) + (filterClass = true) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage() + (modal.errorModal = true)"
                         class="flex flex-col items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': filterClass }">
                         <img src="../assets/icons/icons8-visual-effects-24.png" class="navigation-icons"
@@ -161,7 +161,7 @@
                     </div>
                 </div>
 
-                <div class="flex sm:flex-row  items-center sm:py-3 py-0 sm:w-1/2  w-full  justify-center border border-cyan-400"
+                <div class="flex sm:flex-row  items-center sm:py-3 py-0 sm:w-1/2  w-full  justify-around border border-cyan-400"
                     v-else-if="(brightnessClass) && (imgSrc || resultImg)">
 
                     <div class="flex flex-row  cursor-pointer   sm:mx-4 mx-2 justify-center  ">
@@ -169,21 +169,56 @@
                             alt="rotate-left-icon">
                         <div class="text-sm font-bold"><span class="text-sm font-bold ">contrast</span> <input
                                 type="number" class="w-14  ml-1  border-2 border-black text-center rounded-lg"
-                                v-model="brightnessFilterValue.contrast"></div>
+                                v-model="brightnessFilterValue.contrast" min="0"></div>
+                    </div>
+                    <div class="flex flex-row  cursor-pointer  sm:mx-4 mx-2  justify-center"
+                        v-on:click="(brightnessFilterValue.contrast = 100) && (brightnessFilterValue.gamma = 100)">
+                        <img src="../assets/icons/icons8-restart-64.png" class="options-icons" alt="rotate-left-icon">
+                        <h3 class="text-sm font-bold">reset values</h3>
                     </div>
                     <div class="flex flex-row  cursor-pointer  sm:mx-4 mx-2  justify-center  ">
                         <img src="../assets/icons/icons8-automatic-brightness-50.png" class="options-icons"
                             alt="rotate-left-icon">
                         <div class="text-sm font-bold"><span class="text-sm font-bold">gamma</span> <input type="number"
                                 class="w-14 ml-1  border-2 border-black text-center rounded-lg"
-                                v-model="brightnessFilterValue.gamma"></div>
+                                v-model="brightnessFilterValue.gamma" min="0"></div>
                     </div>
+
                 </div>
 
-                <div class="flex sm:flex-row  items-center sm:py-3 py-0 sm:w-1/2  w-full  justify-center border border-cyan-400"
-                    v-else-if="true">
 
-                    
+
+                <div class="flex sm:flex-row   items-center sm:py-3 py-0 sm:w-1/2  w-full  justify-around border border-cyan-400"
+                    v-else-if="(paintingClass) && (imgSrc || resultImg)">
+                    <!-- <div class="flex flex-row sm:basis-0 sm:basis-1/4 basis-1/2 justify-center">
+                        <div class="flex flex-row border border-black  cursor-pointer gap-x-1 border border-red-400">
+                            <img src="../assets/icons/icons8-paint-palette-30.png" class="options-icons"
+                                alt="flip-x-icon">
+                            <h3 class="text-sm font-bold">painitng</h3>
+                        </div>
+                    </div> -->
+
+                    <div class="flex flex-row sm:basis-0 sm:basis-1/4 basis-1/2 justify-center ">
+                        <div class="flex flex-row border border-black  cursor-pointer gap-x-1 border border-red-400">
+                            <img src="../assets/icons/icons8-text-width-50.png" class="options-icons" alt="flip-x-icon">
+                            <h3 class="text-sm font-bold">text</h3>
+                        </div>
+                    </div>
+                    <div class="flex flex-row sm:basis-0 sm:basis-1/4 basis-1/2 justify-center">
+                        <div class="flex flex-row border border-black  cursor-pointer gap-x-1 border border-red-400">
+                            <img src="../assets/icons/icons8-restart-64.png" class="options-icons" alt="flip-x-icon">
+                            <h3 class="text-sm font-bold">reset values</h3>
+                        </div>
+                    </div>
+                    <div class="flex flex-row sm:basis-0 sm:basis-1/4 basis-1/2 justify-center ">
+                        <div class="flex flex-row border border-black  cursor-pointer gap-x-1 border border-red-400">
+                            <img src="../assets/icons/icons8-eraser-64.png" class="options-icons" alt="flip-x-icon">
+                            <h3 class="text-sm font-bold">eraser</h3>
+                        </div>
+                    </div>
+
+
+
                 </div>
 
 
@@ -195,8 +230,12 @@
                         <vue-cropper ref="cropper" :src="imgSrc" class="sm:w-3/4 w-full mx-auto " alt="image-source"
                             v-if="imgSrc.length >= 3 && !resultImg">
                         </vue-cropper>
-                        <div class="sm:w-3/4 border border-black w-full mx-auto " v-else-if="resultImg">
-                            <div :class="filterEffect">
+                        <div class="sm:w-3/4 border border-black text-center w-full mx-auto " v-else-if="resultImg">
+                            <div class="text-5xl text-red-600 bg-black z-20  inline-block" ref="textId" v-drag
+                                v-on:mouseup="getCoordinates()">
+                                salaam
+                            </div>
+                            <div :class="filterEffect" class="z-10">
                                 <img :src="resultImg" alt="the Image you imported"
                                     :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.gamma + '%' + ')' }">
                             </div>
@@ -246,20 +285,27 @@
             <div v-else></div>
 
         </div>
-
-
-
-
     </div>
+
+    <Teleport to="#modal">
+        <ErrorModal v-if="modal.errorModal" :title="modal.title" :description="modal.description"
+            @closeErroBtn="closeErrorModal()" />
+        <div v-else></div>
+    </Teleport>
+
 </template>
 <script>
 import { ref, reactive } from 'vue';
+
 // ---------------------------------------------
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 // ---------------------------------------------
+
+import ErrorModal from '../components/errormodal.vue'
+
 export default {
-    components: { VueCropper },
+    components: { VueCropper, ErrorModal },
     setup() {
         let imgSrc = ref("");
         let resultImg = ref("");
@@ -273,6 +319,16 @@ export default {
         let resizeClass = ref(false);
         // ------------------------------
         let filterEffect = ref(false);
+
+        // ------------------------------
+        let textId = ref(null);
+        // ------------------------------
+        const modal = reactive({
+            errorModal: false,
+            title: "",
+            description: ""
+        })
+
 
         const filterHover = reactive({
             one: true,
@@ -307,10 +363,21 @@ export default {
         }
         // ------------------------------
 
+
+        const getCoordinates = () => {
+            console.log(textId.value.getBoundingClientRect().left)
+        }
+
+        // ------------------------------
+        const closeErrorModal = () => {
+            return modal.errorModal = false;
+        }
         return {
             // functions
             onFile,
             resetbrightnessFilterValue,
+            getCoordinates,
+            closeErrorModal,
             // --------
             // Data
             imgSrc,
@@ -324,7 +391,9 @@ export default {
             resizeClass,
             filterEffect,
             filterHover,
-            brightnessFilterValue
+            brightnessFilterValue,
+            textId,
+            modal
 
         }
     },
@@ -366,11 +435,12 @@ export default {
 
         cropeImage() {
             if (!this.imgSrc) {
-                console.error("empty picture !")
+                console.error("empty picture !");
+                           
             } else if (!this.resultImg) {
                 this.resultImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
             } else {
-                console.error("its croped !")
+                console.error("its croped !");
             }
 
         }

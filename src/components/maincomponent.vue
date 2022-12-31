@@ -2,7 +2,7 @@
     <div>
         <Header />
         <div class="h-screen">
-        <router-view></router-view>
+            <router-view></router-view>
         </div>
         <Footer />
     </div>
@@ -11,9 +11,10 @@
 import Header from './mainheader.vue'
 import Footer from './mainfooter.vue'
 export default {
-    components : {
+    components: {
         Header,
-        Footer
+        Footer,
+
     },
 }
 
