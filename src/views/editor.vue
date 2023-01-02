@@ -12,7 +12,7 @@
                         <h2 class="text-base font-bold">crop</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = true) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage() + (modal.errorModal = true)"
+                    <div v-on:click="(cropClass = false) + (filterClass = true) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage()"
                         class="flex flex-col items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': filterClass }">
                         <img src="../assets/icons/icons8-visual-effects-24.png" class="navigation-icons"
@@ -289,8 +289,11 @@
 
     <Teleport to="#modal">
         <ErrorModal v-if="modal.errorModal" :title="modal.title" :description="modal.description"
-            @closeErroBtn="closeErrorModal()" />
+            @closeErroBtn="closeOrOpenErrorModal(false)" />
+        <SuccessModal v-else-if="modal.successModal" :title="modal.title" :description="modal.description"
+            @closeSuccessBtn="closeOrOpenSuccessModal(false)" />
         <div v-else></div>
+
     </Teleport>
 
 </template>
@@ -302,33 +305,42 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 // ---------------------------------------------
 
-import ErrorModal from '../components/errormodal.vue'
+import ErrorModal from '../components/errormodal.vue';
+import SuccessModal from '../components/successmodal.vue';
 
 export default {
-    components: { VueCropper, ErrorModal },
+    components: { VueCropper, ErrorModal, SuccessModal },
     setup() {
+        
         let imgSrc = ref("");
         let resultImg = ref("");
         let defaultRotateDeg = ref(-90);
+
         // ------------------------------
+
         let cropClass = ref(true);
         let filterClass = ref(false);
         let brightnessClass = ref(false);
         let paintingClass = ref(false);
         let frameClass = ref(false);
         let resizeClass = ref(false);
+
         // ------------------------------
+
         let filterEffect = ref(false);
 
         // ------------------------------
+
         let textId = ref(null);
+
         // ------------------------------
+
         const modal = reactive({
             errorModal: false,
+            successModal: false,
             title: "",
             description: ""
         })
-
 
         const filterHover = reactive({
             one: true,
@@ -343,6 +355,7 @@ export default {
             ten: false,
             eleven: false
         })
+
         // ------------------------------
         const brightnessFilterValue = reactive({
             contrast: 100,
@@ -353,31 +366,50 @@ export default {
             brightnessFilterValue.contrast = 100;
             brightnessFilterValue.gamma = 100;
         }
+
         // ------------------------------
+
         const onFile = (e) => {
+            // for import image with select photo field
             const files = e.target.files
             if (!files.length) return
             const reader = new FileReader()
             reader.readAsDataURL(files[0])
             reader.onload = () => (imgSrc.value = reader.result)
         }
-        // ------------------------------
 
+        // ------------------------------
 
         const getCoordinates = () => {
             console.log(textId.value.getBoundingClientRect().left)
         }
 
         // ------------------------------
-        const closeErrorModal = () => {
-            return modal.errorModal = false;
+        const closeOrOpenErrorModal = (params) => {
+            // true or false for show error modal
+            return modal.errorModal = params;
         }
+
+        const closeOrOpenSuccessModal = (params) => {
+             // true or false for show success modal
+            return modal.successModal = params;
+        }
+
+        const modalText = (title, description) => {
+            // its for all modals title and description
+            modal.title = title;
+            modal.description = description;
+        }
+
+        // ------------------------------
         return {
             // functions
             onFile,
             resetbrightnessFilterValue,
             getCoordinates,
-            closeErrorModal,
+            closeOrOpenErrorModal,
+            modalText,
+            closeOrOpenSuccessModal,
             // --------
             // Data
             imgSrc,
@@ -403,10 +435,10 @@ export default {
                 if (this.defaultRotateDeg <= 360 && this.defaultRotateDeg >= -360) {
                     return this.$refs.cropper.rotate(this.defaultRotateDeg);
                 } else {
-                    console.error("wrong size import")
+                    console.error("wrong size import");
                 }
             } else {
-                console.error("its croped ! (rotate)")
+                console.error("its croped ! (rotate)");
             }
         },
 
@@ -418,7 +450,7 @@ export default {
                 this.$refs.cropper.scaleX(scale);
                 dom.setAttribute('data-scale', scale);
             } else {
-                console.error("its croped ! (filipx)")
+                console.error("its croped ! (filipx)");
             }
         },
 
@@ -436,7 +468,9 @@ export default {
         cropeImage() {
             if (!this.imgSrc) {
                 console.error("empty picture !");
-                           
+                this.closeOrOpenErrorModal(true);
+                this.modalText("empty picture", "please swtich to the crop field and use the 'Select Photo' !");
+
             } else if (!this.resultImg) {
                 this.resultImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
             } else {
@@ -465,9 +499,7 @@ export default {
 
 }
 
-.navigation-icons {
-    width: 30px;
-}
+
 
 .options-icons {
     width: 18px;
