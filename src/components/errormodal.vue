@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" >
+    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -19,9 +19,9 @@
                   </svg>
                 </div>
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">{{ title }}</h3>
+                  <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title" v-html="title"></h3>
                   <div class="mt-2">
-                    <p class="text-sm text-gray-500">{{ description }}</p>
+                    <p class="text-sm text-gray-500" v-html="description"></p>
                   </div>
                 </div>
               </div>
@@ -45,7 +45,7 @@ export default {
     title: String,
     description: String,
   },
-  
+
 }
 </script>
 <style scoped>

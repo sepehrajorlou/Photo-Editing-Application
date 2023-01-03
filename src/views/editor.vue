@@ -12,7 +12,7 @@
                         <h2 class="text-base font-bold">crop</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = true) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage()"
+                    <div v-on:click="(cropClass = false) + (filterClass = true) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage(false)"
                         class="flex flex-col items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': filterClass }">
                         <img src="../assets/icons/icons8-visual-effects-24.png" class="navigation-icons"
@@ -20,21 +20,21 @@
                         <h2 class="text-base font-bold">filter</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = true) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage()"
+                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = true) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage(false)"
                         class="flex flex-col items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': brightnessClass }">
                         <img src="../assets/icons/icons8-sun-60.png" class="navigation-icons" alt="brightness-icon">
                         <h2 class="text-base font-bold">brightness</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = false) + (paintingClass = true) + (frameClass = false) + (resizeClass = false) + cropeImage()"
+                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = false) + (paintingClass = true) + (frameClass = false) + (resizeClass = false) + cropeImage(false)"
                         class="flex flex-col  items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': paintingClass }">
                         <img src="../assets/icons/icons8-sign-up-50.png" class="navigation-icons" alt="painting-icon">
                         <h2 class="text-base font-bold">painting</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = false) + (paintingClass = false) + (frameClass = true) + (resizeClass = false) + cropeImage()"
+                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = false) + (paintingClass = false) + (frameClass = true) + (resizeClass = false) + cropeImage(false)"
                         class="flex flex-col  items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': frameClass }">
                         <img src="../assets/icons/icons8-hanging-frame-50.png" class="navigation-icons"
@@ -42,7 +42,7 @@
                         <h2 class="text-base font-bold">frame</h2>
                     </div>
 
-                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = true) + cropeImage()"
+                    <div v-on:click="(cropClass = false) + (filterClass = false) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = true) + cropeImage(false)"
                         class="flex flex-col  items-center sm:basis-0 cursor-pointer basis-1/3 hover:bg-sky-400 p-2 rounded-xl"
                         :class="{ 'bg-sky-400': resizeClass }">
                         <img src="../assets/icons/icons8-resize-50.png" class="navigation-icons" alt="resize-icon">
@@ -86,7 +86,7 @@
 
                     <div class="flex flex-row sm:basis-0 sm:basis-1/4 basis-1/2 justify-center order-2">
                         <div ref="flipX" class="flex flex-row border border-black  cursor-pointer gap-x-1"
-                            v-on:click="cropeImage()">
+                            v-on:click="cropeImage(true)">
                             <img src="../assets/icons/icons8-cut-50.png" class="options-icons" alt="flip-x-icon">
                             <h3 class="text-sm font-bold">crop</h3>
                         </div>
@@ -239,10 +239,7 @@
                                 <img :src="resultImg" alt="the Image you imported"
                                     :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.gamma + '%' + ')' }">
                             </div>
-
-
                         </div>
-
 
 
 
@@ -264,7 +261,7 @@
 
 
 
-
+            <a :href="resultImg" download>clickkkkkkkkkkkkkkkkkk</a>
 
 
 
@@ -311,13 +308,12 @@ import SuccessModal from '../components/successmodal.vue';
 export default {
     components: { VueCropper, ErrorModal, SuccessModal },
     setup() {
-        
+
         let imgSrc = ref("");
         let resultImg = ref("");
         let defaultRotateDeg = ref(-90);
 
         // ------------------------------
-
         let cropClass = ref(true);
         let filterClass = ref(false);
         let brightnessClass = ref(false);
@@ -326,15 +322,12 @@ export default {
         let resizeClass = ref(false);
 
         // ------------------------------
-
         let filterEffect = ref(false);
 
         // ------------------------------
-
         let textId = ref(null);
 
         // ------------------------------
-
         const modal = reactive({
             errorModal: false,
             successModal: false,
@@ -368,7 +361,6 @@ export default {
         }
 
         // ------------------------------
-
         const onFile = (e) => {
             // for import image with select photo field
             const files = e.target.files
@@ -378,8 +370,8 @@ export default {
             reader.onload = () => (imgSrc.value = reader.result)
         }
 
+        
         // ------------------------------
-
         const getCoordinates = () => {
             console.log(textId.value.getBoundingClientRect().left)
         }
@@ -391,7 +383,7 @@ export default {
         }
 
         const closeOrOpenSuccessModal = (params) => {
-             // true or false for show success modal
+            // true or false for show success modal
             return modal.successModal = params;
         }
 
@@ -402,6 +394,11 @@ export default {
         }
 
         // ------------------------------
+
+
+        const test = () => {
+            console.log(imgSrc)
+        }
         return {
             // functions
             onFile,
@@ -411,6 +408,7 @@ export default {
             modalText,
             closeOrOpenSuccessModal,
             // --------
+            test,
             // Data
             imgSrc,
             resultImg,
@@ -429,16 +427,21 @@ export default {
 
         }
     },
+
     methods: {
         rotate() {
             if (!this.resultImg) {
                 if (this.defaultRotateDeg <= 360 && this.defaultRotateDeg >= -360) {
                     return this.$refs.cropper.rotate(this.defaultRotateDeg);
                 } else {
-                    console.error("wrong size import");
+                    // console.error("wrong size import");
+                    this.closeOrOpenErrorModal(true);
+                    this.modalText("Incorrect angle !", "The rotation angle of the photo is incorrect ! <br> The value must be between -360 and +360 degrees.");
                 }
             } else {
-                console.error("its croped ! (rotate)");
+                // console.error("its croped ! (rotate)");
+                this.closeOrOpenErrorModal(true);
+                this.modalText("Cropped!", "Please use the reset option first to <span class='text-red-600 font-bold'>'erase'</span> all changes");
             }
         },
 
@@ -450,7 +453,9 @@ export default {
                 this.$refs.cropper.scaleX(scale);
                 dom.setAttribute('data-scale', scale);
             } else {
-                console.error("its croped ! (filipx)");
+                // console.error("its croped ! (filipx)");
+                this.closeOrOpenErrorModal(true);
+                this.modalText("Cropped!", "Please use the reset option first to <span class='text-red-600 font-bold'>'erase'</span> all changes");
             }
         },
 
@@ -465,16 +470,28 @@ export default {
             }
         },
 
-        cropeImage() {
+        cropeImage(isCropBtn) {
             if (!this.imgSrc) {
-                console.error("empty picture !");
+                // console.error("empty picture !");
                 this.closeOrOpenErrorModal(true);
                 this.modalText("empty picture", "please swtich to the crop field and use the 'Select Photo' !");
 
-            } else if (!this.resultImg) {
+            } else if (isCropBtn) {
+                if (!this.resultImg) {
+                    this.resultImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+                } else if (this.resultImg && this.imgSrc) {
+                    this.closeOrOpenErrorModal(true);
+                    this.modalText("Cropped!", "Please use the reset option first to <span class='text-red-600 font-bold'>'erase'</span> all changes");
+                } else {
+                    // not statement here (:
+                }
+            } else if (!this.resultImg && !isCropBtn && !isCropBtn) {
                 this.resultImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+                this.closeOrOpenSuccessModal(true);
+                this.modalText("cropped !", "The photo was automatically cropped !");
+
             } else {
-                console.error("its croped !");
+                // maybe console.error("its croped !");
             }
 
         }
