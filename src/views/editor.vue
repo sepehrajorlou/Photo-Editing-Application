@@ -5,7 +5,7 @@
 
                 <div
                     class="flex sm:flex-row sm:gap-y-0 gap-y-4 sm:w-1/2 w-full  items-center justify-between flex-wrap border border-red-400">
-                    <div v-on:click="(cropClass = true) + (filterClass = false) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false)"
+                    <div v-on:click="(cropClass = true) + (filterClass = false) + (brightnessClass = false) + (paintingClass = false) + (frameClass = false) + (resizeClass = false) + cropeImage(false)"
                         class="flex flex-col  items-center sm:basis-0 basis-1/3 cursor-pointer hover:bg-sky-400 p-2 rounded-xl"
                         :class="{'bg-sky-400' : cropClass}">
                         <img src="../assets/icons/icons8-crop-64.png" class="navigation-icons" alt="crop-icon">
@@ -172,16 +172,16 @@
                                 v-model="brightnessFilterValue.contrast" min="0"></div>
                     </div>
                     <div class="flex flex-row  cursor-pointer  sm:mx-4 mx-2  justify-center"
-                        v-on:click="(brightnessFilterValue.contrast = 100) && (brightnessFilterValue.gamma = 100)">
+                        v-on:click="(brightnessFilterValue.contrast = 100) && (brightnessFilterValue.brightness = 100)">
                         <img src="../assets/icons/icons8-restart-64.png" class="options-icons" alt="rotate-left-icon">
                         <h3 class="text-sm font-bold">reset values</h3>
                     </div>
                     <div class="flex flex-row  cursor-pointer  sm:mx-4 mx-2  justify-center  ">
                         <img src="../assets/icons/icons8-automatic-brightness-50.png" class="options-icons"
                             alt="rotate-left-icon">
-                        <div class="text-sm font-bold"><span class="text-sm font-bold">gamma</span> <input type="number"
-                                class="w-14 ml-1  border-2 border-black text-center rounded-lg"
-                                v-model="brightnessFilterValue.gamma" min="0"></div>
+                        <div class="text-sm font-bold"><span class="text-sm font-bold">brightness</span> <input
+                                type="number" class="w-14 ml-1  border-2 border-black text-center rounded-lg"
+                                v-model="brightnessFilterValue.brightness" min="0"></div>
                     </div>
 
                 </div>
@@ -230,14 +230,19 @@
                         <vue-cropper ref="cropper" :src="imgSrc" class="sm:w-3/4 w-full mx-auto " alt="image-source"
                             v-if="imgSrc.length >= 3 && !resultImg">
                         </vue-cropper>
-                        <div class="sm:w-3/4 border border-black text-center w-full mx-auto " v-else-if="resultImg">
-                            <div class="text-5xl text-red-600 bg-black z-20  inline-block" ref="textId" v-drag
-                                v-on:mouseup="getCoordinates()">
-                                salaam
-                            </div>
-                            <div :class="filterEffect" class="z-10">
-                                <img :src="resultImg" alt="the Image you imported"
-                                    :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.gamma + '%' + ')' }">
+                        <div class="sm:w-3/4  text-center w-full mx-auto " v-else-if="resultImg">
+                            <div :class="filterEffect" class="z-10" ref="imageContainerDiv">
+
+                                <img :src="resultImg" alt="the Image you imported" ref="noneShowImage" class="z-50"
+                                    :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.brightness + '%' + ')' + 'blur' + '(' + brightnessFilterValue.blur + 'px' + ')' }">
+                                <!-- Optimization !! -->
+                                <canvas ref="canvas" :width="canvasValues.widthImage" :height="canvasValues.heightImage"
+                                    class="mx-auto">
+                                    <!-- remove from html template -->
+                                </canvas>
+
+
+
                             </div>
                         </div>
 
@@ -250,7 +255,9 @@
                                 Photo</label>
                             <img src="../assets/icons/icons8-import-50.png" class="navigation-icons" alt="import-icon">
                         </div>
-                        <div v-else></div>
+                        <div v-else>
+                            <!-- else -->
+                        </div>
 
                     </div>
                 </div>
@@ -261,7 +268,7 @@
 
 
 
-            <a :href="resultImg" download>clickkkkkkkkkkkkkkkkkk</a>
+
 
 
 
@@ -279,7 +286,9 @@
                     <img src="../assets/icons/icons8-import-50.png" class="navigation-icons" alt="import-icon">
                 </div>
             </div>
-            <div v-else></div>
+            <div v-else>
+                <!-- else -->
+            </div>
 
         </div>
     </div>
@@ -289,13 +298,17 @@
             @closeErroBtn="closeOrOpenErrorModal(false)" />
         <SuccessModal v-else-if="modal.successModal" :title="modal.title" :description="modal.description"
             @closeSuccessBtn="closeOrOpenSuccessModal(false)" />
-        <div v-else></div>
+        <div v-else>
+            <!-- else -->
+        </div>
 
     </Teleport>
-
+    <!-- <Header @fortest="test()" /> -->
+    <!-- <button @click="test2()">clickkk</button> -->
+    <button @click="exportImageDownload()" class="block">export</button>
 </template>
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch, watchEffect } from 'vue';
 
 // ---------------------------------------------
 import VueCropper from 'vue-cropperjs';
@@ -304,16 +317,24 @@ import 'cropperjs/dist/cropper.css';
 
 import ErrorModal from '../components/errormodal.vue';
 import SuccessModal from '../components/successmodal.vue';
+// ---------------------------------------------
+
 
 export default {
     components: { VueCropper, ErrorModal, SuccessModal },
-    setup() {
+    props: {
+        status: Number
+    },
 
+    setup(props) {
+
+        // *******************data********************************
+        // simple sources
         let imgSrc = ref("");
         let resultImg = ref("");
         let defaultRotateDeg = ref(-90);
 
-        // ------------------------------
+        // about selection sections --------------------
         let cropClass = ref(true);
         let filterClass = ref(false);
         let brightnessClass = ref(false);
@@ -321,19 +342,23 @@ export default {
         let frameClass = ref(false);
         let resizeClass = ref(false);
 
-        // ------------------------------
-        let filterEffect = ref(false);
+
+
 
         // ------------------------------
         let textId = ref(null);
 
-        // ------------------------------
-        const modal = reactive({
-            errorModal: false,
-            successModal: false,
-            title: "",
-            description: ""
+
+        // about brightnes and filter values------------------------------
+        let filterEffect = ref(false);
+        const brightnessFilterValue = reactive({
+            contrast: 100,
+            brightness: 100,
+            blur: 0,
+            grayScale: 0,
+            // ...
         })
+
 
         const filterHover = reactive({
             one: true,
@@ -349,18 +374,38 @@ export default {
             eleven: false
         })
 
-        // ------------------------------
-        const brightnessFilterValue = reactive({
-            contrast: 100,
-            gamma: 100
+
+
+        // canvas section --------------------
+        let canvas = ref(null)
+        let noneShowImage = ref(null)
+        let imageContainerDiv = ref(null)
+        let img2 = ref(null)
+        let noneShowImageDisplay = ref(true)
+        const canvasValues = reactive({
+            widthImage: 0,
+            heightImage: 0,
+            canvasDisplay: false
         })
 
+        let imgSourceForDownload = ref(null);
+
+        // modal section --------------------
+        const modal = reactive({
+            errorModal: false,
+            successModal: false,
+            title: "",
+            description: ""
+        })
+
+
+        // *******************functions ********************************
         const resetbrightnessFilterValue = () => {
             brightnessFilterValue.contrast = 100;
-            brightnessFilterValue.gamma = 100;
+            brightnessFilterValue.brightness = 100;
         }
 
-        // ------------------------------
+        // about import section ------------------------------
         const onFile = (e) => {
             // for import image with select photo field
             const files = e.target.files
@@ -370,13 +415,15 @@ export default {
             reader.onload = () => (imgSrc.value = reader.result)
         }
 
-        
-        // ------------------------------
+
+        // Dimensions functions------------------------------
         const getCoordinates = () => {
             console.log(textId.value.getBoundingClientRect().left)
         }
 
-        // ------------------------------
+        // modal functions ------------------------------
+
+
         const closeOrOpenErrorModal = (params) => {
             // true or false for show error modal
             return modal.errorModal = params;
@@ -393,12 +440,97 @@ export default {
             modal.description = description;
         }
 
-        // ------------------------------
+        // canvas functions ------------------------------
 
 
-        const test = () => {
-            console.log(imgSrc)
+        const getCanvasHeightAndWIdth = () => {
+            canvasValues.widthImage = noneShowImage.value.clientWidth;
+            canvasValues.heightImage = noneShowImage.value.clientHeight;
+            // ( not using in html template )
+
         }
+
+        const canvasDisplay = (params) => {
+            return canvasValues.canvasDisplay = params;
+            // ( not using in html template )
+        }
+
+        const noneShowImageDisplayFunction = (params) => {
+            return noneShowImageDisplay.value = params;
+            // ( not using in html template )
+        }
+
+        const imageCanvas = () => {
+            img2 = new Image();
+            return img2.src = canvas.value.toDataURL("image/png", 1);
+            // ( not using in html template )
+        }
+
+        const drawImageFunction = (ctx, params1, params2, params3, params4, params5) => {
+            return ctx.drawImage(params1, params2, params3, params4, params5);
+            // ( not using in html template )
+        }
+        const fillRectFunction = (ctx, params1, params2, params3, params4) => {
+            return ctx.fillRect(params1, params2, params3, params4);
+            // ( not using in html template )
+        }
+
+        const convertor_canvas_image = () => {
+            // crop btn
+            const ctx = canvas.value.getContext("2d");
+            ctx.filter = `contrast(${brightnessFilterValue.contrast}%)` + `brightness(${brightnessFilterValue.brightness}%)` + `blur(${brightnessFilterValue.blur}px)`;
+            fillRectFunction(ctx, 0, 0, canvasValues.widthImage, canvasValues.heightImage);
+            drawImageFunction(ctx, noneShowImage.value, 0, 0, canvas.value.width, canvas.value.height);
+            imageCanvas();
+
+            // ( not using in html template )
+            // refactor !!
+        }
+
+
+        const convertToCanvas = () => {
+            setTimeout(() => {
+                getCanvasHeightAndWIdth(0);
+            }, 20)
+
+            setTimeout(() => {
+                convertor_canvas_image();
+            }, 100)
+        }
+
+
+        const exportImageDownload = () => {
+            // actually this hs export btn function
+            convertToCanvas();
+            setTimeout(() => {
+                imgSourceForDownload.value = canvas.value.toDataURL("image/png", 1);
+            }, 185)
+            setTimeout(() => {
+                let a = document.createElement("a");
+                a.href = imgSourceForDownload.value;
+                a.download = "Test.png";
+                a.click();
+            }, 250)
+            // need time to proccess convertToCanva() -
+            // so i used setTimeOut with 185 ms
+        }
+
+
+
+        // ******************* reactivity ********************************
+        watch([props], (newVlaue, oldValue) => {
+            if (props.status) {
+                exportImageDownload();
+            }
+        })
+
+        // watch([props , test], ([newpropsvalue , newtestvalue] , [oldpropsvalue , oldtestvalue]) => {
+        //     if (props.status) {
+        //         // exportImageDownload();
+        //        
+        //     } else if(test){}
+        // })
+
         return {
             // functions
             onFile,
@@ -407,8 +539,15 @@ export default {
             closeOrOpenErrorModal,
             modalText,
             closeOrOpenSuccessModal,
+
+            convertToCanvas,
+            exportImageDownload,
+            canvasDisplay,
+            noneShowImageDisplayFunction,
             // --------
-            test,
+
+
+
             // Data
             imgSrc,
             resultImg,
@@ -423,7 +562,14 @@ export default {
             filterHover,
             brightnessFilterValue,
             textId,
-            modal
+            modal,
+            
+            imageContainerDiv,
+            img2,
+            noneShowImageDisplay,
+            canvasValues,
+            canvas,
+            noneShowImage,
 
         }
     },
@@ -460,6 +606,10 @@ export default {
         },
 
         resetCrop() {
+
+
+            // this.noneShowImageDisplay = false;
+            this.noneShowImageDisplayFunction(false);
             if (!this.resultImg) {
                 this.$refs.cropper.reset();
                 this.resetbrightnessFilterValue();
@@ -471,6 +621,8 @@ export default {
         },
 
         cropeImage(isCropBtn) {
+            // this.convertToCanvas()
+            // this.noneShowImageDisplay = true;
             if (!this.imgSrc) {
                 // console.error("empty picture !");
                 this.closeOrOpenErrorModal(true);
@@ -483,19 +635,26 @@ export default {
                     this.closeOrOpenErrorModal(true);
                     this.modalText("Cropped!", "Please use the reset option first to <span class='text-red-600 font-bold'>'erase'</span> all changes");
                 } else {
+
                     // not statement here (:
                 }
             } else if (!this.resultImg && !isCropBtn && !isCropBtn) {
+                // this.convertToCanvas();
                 this.resultImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
                 this.closeOrOpenSuccessModal(true);
                 this.modalText("cropped !", "The photo was automatically cropped !");
 
             } else {
-                // maybe console.error("its croped !");
+                // maybe console.error("its croped !");            
             }
 
         }
-    }
+    },
+    // watch : {
+    //     status(){
+    //         this.exportImageDownload()
+    //     }
+    // }
 
 
 }
@@ -546,5 +705,10 @@ export default {
 
 .min-width-200 {
     min-width: 150px;
+}
+
+
+.test {
+    filter: blur(5px);
 }
 </style>

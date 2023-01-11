@@ -19,7 +19,7 @@
                         <h1 class="font-bold sm:text-xl text-base mx">Social media templates</h1>
                     </div>
                     <div>
-                        <h1 class="font-bold sm:text-xl text-base ">get in touch</h1>
+                        <h1 class="font-bold sm:text-xl text-base text-amber-400 cursor-pointer" @click="$emit('updateExportValue')" >export</h1>
                     </div>
                 </div>
             </div>
