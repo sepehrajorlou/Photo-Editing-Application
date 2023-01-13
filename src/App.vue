@@ -8,9 +8,13 @@
 
 
 <script>
-export default {
- 
-}
+// import { useCounterStore }  from './pinia/store'
+// export default {
+//   setup(){
+//     const test = useCounterStore()
+//     console.log(test.$state.count)
+//   }
+// }
 </script>
 
 

@@ -1,9 +1,13 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-export const useCounterStore = defineStore('counter' ,  {
+export const useCounterStore = defineStore('counter', {
   state: () => {
-    return { count: 55 }
+    return { IsImageAvailable: false }
   },
-   
+  actions: {
+    IsImageAvailableTrueFalseFunction(params) {
+      return this.IsImageAvailable = params;
+    }
+  }
 
 })

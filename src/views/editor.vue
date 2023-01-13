@@ -227,6 +227,7 @@
 
                 <div class="border border-green-800  w-full " id="mydiv">
                     <div class="">
+
                         <vue-cropper ref="cropper" :src="imgSrc" class="sm:w-3/4 w-full mx-auto " alt="image-source"
                             v-if="imgSrc.length >= 3 && !resultImg">
                         </vue-cropper>
@@ -236,8 +237,8 @@
                                 <img :src="resultImg" alt="the Image you imported" ref="noneShowImage" class="z-50"
                                     :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.brightness + '%' + ')' + 'blur' + '(' + brightnessFilterValue.blur + 'px' + ')' }">
                                 <!-- Optimization !! -->
-                                <canvas ref="canvas" :width="canvasValues.widthImage" :height="canvasValues.heightImage"
-                                    class="mx-auto">
+                                <canvas ref="canvas" :width="canvasValues.downloaderWidth"
+                                    :height="canvasValues.downloaderHeight" class="mx-auto hidden">
                                     <!-- remove from html template -->
                                 </canvas>
 
@@ -305,10 +306,12 @@
     </Teleport>
     <!-- <Header @fortest="test()" /> -->
     <!-- <button @click="test2()">clickkk</button> -->
-    <button @click="exportImageDownload()" class="block">export</button>
+    <button @click="" class="block">export</button>
+    <br>
+    <button @click="test2()" class="block">export2</button>
 </template>
 <script>
-import { ref, reactive, watch, watchEffect } from 'vue';
+import { ref, reactive, watch } from 'vue';
 
 // ---------------------------------------------
 import VueCropper from 'vue-cropperjs';
@@ -317,21 +320,25 @@ import 'cropperjs/dist/cropper.css';
 
 import ErrorModal from '../components/errormodal.vue';
 import SuccessModal from '../components/successmodal.vue';
+
 // ---------------------------------------------
 
+import { useCounterStore } from '../pinia/store.js'
 
 export default {
     components: { VueCropper, ErrorModal, SuccessModal },
     props: {
-        status: Number
+        status: Number,
+        imageQualityprops: String
     },
 
     setup(props) {
 
         // *******************data********************************
+        const store = useCounterStore();
         // simple sources
         let imgSrc = ref("");
-        let resultImg = ref("");
+        let resultImg = ref(null);
         let defaultRotateDeg = ref(-90);
 
         // about selection sections --------------------
@@ -385,6 +392,10 @@ export default {
         const canvasValues = reactive({
             widthImage: 0,
             heightImage: 0,
+            downloaderWidth: 0,
+            downloaderHeight: 0,
+            canvasOrginalWidth: 0,
+            canvasOrginalHeight: 0,
             canvasDisplay: false
         })
 
@@ -405,20 +416,73 @@ export default {
             brightnessFilterValue.brightness = 100;
         }
 
+
+
+
+        // Dimensions functions------------------------------
+
+
+        const getCoordinates = () => {
+            console.log(textId.value.getBoundingClientRect().left)
+        }
+
+        const getOrginalHeightWidthImage = () => {
+            let img = new Image();
+            img.src = imgSrc.value;
+            img.onload = () => {
+                canvasValues.canvasOrginalWidth = img.width;
+                canvasValues.canvasOrginalHeight = img.height;
+            }
+            // ( not using in html template )
+        }
+
+        const calculatingDownloadImageSize = (parcentParameter) => {
+            const Widtha = (canvasValues.canvasOrginalWidth / 100);
+            const Widthb = Widtha * parcentParameter;
+            const Widthc = canvasValues.canvasOrginalWidth - Widthb;
+            canvasValues.downloaderWidth = Widthc;
+
+            const Heighta = (canvasValues.canvasOrginalHeight / 100);
+            const Heightb = Heighta * parcentParameter;
+            const Heightc = canvasValues.canvasOrginalHeight - Heightb;
+            canvasValues.downloaderHeight = Heightc;
+            // ( not using in html template )
+
+        }
+
+        const finalCalculatingDownloadImageSize = () => {
+
+            if (props.imageQualityprops == "small") {
+                console.log(true)
+                return calculatingDownloadImageSize(55);
+            } else if (props.imageQualityprops == "medium") {
+                return calculatingDownloadImageSize(35);
+            } else if (props.imageQualityprops == "large") {
+                return calculatingDownloadImageSize(15);
+            } else if (props.imageQualityprops == "orginal") {
+                return calculatingDownloadImageSize(0.00001);
+            } else {
+                // empty else (:
+            }
+            // ( not using in html template )
+        }
+
+
+
+
         // about import section ------------------------------
+
         const onFile = (e) => {
             // for import image with select photo field
             const files = e.target.files
             if (!files.length) return
-            const reader = new FileReader()
-            reader.readAsDataURL(files[0])
-            reader.onload = () => (imgSrc.value = reader.result)
-        }
+            const reader = new FileReader();
+            reader.readAsDataURL(files[0]);
+            reader.onload = () => (imgSrc.value = reader.result);
 
-
-        // Dimensions functions------------------------------
-        const getCoordinates = () => {
-            console.log(textId.value.getBoundingClientRect().left)
+            setTimeout(() => {
+                getOrginalHeightWidthImage();
+            }, 50)
         }
 
         // modal functions ------------------------------
@@ -496,12 +560,16 @@ export default {
             setTimeout(() => {
                 convertor_canvas_image();
             }, 100)
+
+            // reading about async
         }
 
 
         const exportImageDownload = () => {
             // actually this hs export btn function
+            finalCalculatingDownloadImageSize();
             convertToCanvas();
+
             setTimeout(() => {
                 imgSourceForDownload.value = canvas.value.toDataURL("image/png", 1);
             }, 185)
@@ -517,19 +585,32 @@ export default {
 
 
 
+
+        const test2 = () => {
+            // store.IsImageAvailableTrueFalseFunction(true)
+            console.log(imgSrc.value)
+        }
         // ******************* reactivity ********************************
-        watch([props], (newVlaue, oldValue) => {
-            if (props.status) {
+        watch(() => [props.status, resultImg.value, imgSrc.value], (newValS, oldValS) => {
+            // console.log("old =" + oldValS[2])
+            // console.log("new =" + newValS[2].length)
+            if (newValS[0] > oldValS[0]) {
                 exportImageDownload();
+            } else if (!newValS[2]) {
+                return store.IsImageAvailableTrueFalseFunction(false);
             }
+            else if (newValS[1] != null) {
+                return store.IsImageAvailableTrueFalseFunction(true);
+            }
+            else if (newValS[1] == null) {
+                return store.IsImageAvailableTrueFalseFunction(false);
+            } else {
+                // empty else
+            }
+
         })
 
-        // watch([props , test], ([newpropsvalue , newtestvalue] , [oldpropsvalue , oldtestvalue]) => {
-        //     if (props.status) {
-        //         // exportImageDownload();
-        //        
-        //     } else if(test){}
-        // })
+
 
         return {
             // functions
@@ -539,15 +620,12 @@ export default {
             closeOrOpenErrorModal,
             modalText,
             closeOrOpenSuccessModal,
-
             convertToCanvas,
             exportImageDownload,
             canvasDisplay,
             noneShowImageDisplayFunction,
             // --------
-
-
-
+            test2,
             // Data
             imgSrc,
             resultImg,
@@ -563,13 +641,15 @@ export default {
             brightnessFilterValue,
             textId,
             modal,
-            
             imageContainerDiv,
             img2,
             noneShowImageDisplay,
             canvasValues,
             canvas,
             noneShowImage,
+            // --------
+
+            // computed
 
         }
     },
@@ -606,16 +686,13 @@ export default {
         },
 
         resetCrop() {
-
-
-            // this.noneShowImageDisplay = false;
-            this.noneShowImageDisplayFunction(false);
             if (!this.resultImg) {
+                this.resultImg = null;
                 this.$refs.cropper.reset();
                 this.resetbrightnessFilterValue();
 
             } else {
-                this.resultImg = '';
+                this.resultImg = null;
                 this.resetbrightnessFilterValue();
             }
         },
