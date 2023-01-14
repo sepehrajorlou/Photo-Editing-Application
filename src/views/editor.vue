@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div v-else></div> -->
+
 
 
 
@@ -102,63 +102,70 @@
                     <!-- && (imgSrc || resultImg) -->
                     <div class="min-width-200 text-center ">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = false) + (filterHover.one = true) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            v-on:click="(filterEffect = false) + (filterHover.one = true) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false) + (resetFilterNormal())"
                             :class="{ 'bg-amber-400': filterHover.one }">
                             normal</h3>
                     </div>
 
                     <div class="min-width-200 text-center ">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-amazon') + + (filterHover.one = false) + (filterHover.two = true) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.two }">amazon</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.blur += 5) + (filterHover.one = false) + (filterHover.two = true) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.two }">heavy blur</h3>
                     </div>
 
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-SummerHeat') + + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = true) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.three }">summer heat</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.grayScale += 100) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = true) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.three }">grayscale</h3>
                     </div>
 
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-Fever') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = true) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.four }">fever</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.hueRotate += 90) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = true) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.four }">hue-rotate 90</h3>
                     </div>
+
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-Ryellow') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = true) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.five }">ryellow</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.hueRotate += 180) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = true) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.five }">hue rotate 180</h3>
                     </div>
+
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-IcyWater') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = true) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.six }">icy water</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.invert += 100) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = true) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.six }">invert</h3>
                     </div>
+
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="filterEffect = ('image-container-SweetSunset') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = true) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.seven }">sweet sunset</h3>
+                            v-on:click="filterEffect = (resetFilterNormal()) + (brightnessFilterValue.saturate += 7) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = true) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.seven }">saturate</h3>
                     </div>
+
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-Waterness') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = true) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.eight }">waterness</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.blur += 1) + + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = true) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.eight }">light blur</h3>
                     </div>
+
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-CoalPaper') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = true) + (filterHover.ten = false) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.nine }">coal paper</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.sepia += 100) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = true) + (filterHover.ten = false) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.nine }">sepia</h3>
                     </div>
+
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
-                            v-on:click="(filterEffect = 'image-container-SimpleGray') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = true) + (filterHover.eleven = false)"
-                            :class="{ 'bg-amber-400': filterHover.ten }">simple gray</h3>
+                            v-on:click="(resetFilterNormal()) + (brightnessFilterValue.hueRotate += 240)  + (brightnessFilterValue.saturate += 3) + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = true) + (filterHover.eleven = false)"
+                            :class="{ 'bg-amber-400': filterHover.ten }">h r 240 s3</h3>
                     </div>
+                    <!-- 
                     <div class="min-width-200 text-center">
                         <h3 class="text-lg font-bold cursor-pointer inline-block hover:bg-amber-400 rounded-lg p-3"
                             v-on:click="(filterEffect = 'image-container-SpaceTrip') + (filterHover.one = false) + (filterHover.two = false) + (filterHover.three = false) + (filterHover.four = false) + (filterHover.five = false) + (filterHover.six = false) + (filterHover.seven = false) + (filterHover.eight = false) + (filterHover.nine = false) + (filterHover.ten = false) + (filterHover.eleven = true)"
                             :class="{ 'bg-amber-400': filterHover.eleven }">space trip</h3>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="flex sm:flex-row  items-center sm:py-3 py-0 sm:w-1/2  w-full  justify-around border border-cyan-400"
@@ -235,7 +242,7 @@
                             <div :class="filterEffect" class="z-10" ref="imageContainerDiv">
 
                                 <img :src="resultImg" alt="the Image you imported" ref="noneShowImage" class="z-50"
-                                    :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.brightness + '%' + ')' + 'blur' + '(' + brightnessFilterValue.blur + 'px' + ')' }">
+                                    :style="{ filter: 'contrast' + '(' + brightnessFilterValue.contrast + '%' + ')' + 'brightness' + '(' + brightnessFilterValue.brightness + '%' + ')' + 'blur' + '(' + brightnessFilterValue.blur + 'px' + ')' + 'grayscale' + '(' + brightnessFilterValue.grayScale + '%' + ')' + 'hue-rotate' + '(' + brightnessFilterValue.hueRotate + 'deg' + ')' + 'invert' + '(' + brightnessFilterValue.invert + '%' + ')' + 'saturate' + '(' + brightnessFilterValue.saturate + ')' + 'sepia' + '(' + brightnessFilterValue.sepia + '%' + ')' }">
                                 <!-- Optimization !! -->
                                 <canvas ref="canvas" :width="canvasValues.downloaderWidth"
                                     :height="canvasValues.downloaderHeight" class="mx-auto hidden">
@@ -363,6 +370,10 @@ export default {
             brightness: 100,
             blur: 0,
             grayScale: 0,
+            hueRotate: 0,
+            invert: 0,
+            saturate: 1,
+            sepia: 0
             // ...
         })
 
@@ -453,7 +464,6 @@ export default {
         const finalCalculatingDownloadImageSize = () => {
 
             if (props.imageQualityprops == "small") {
-                console.log(true)
                 return calculatingDownloadImageSize(55);
             } else if (props.imageQualityprops == "medium") {
                 return calculatingDownloadImageSize(35);
@@ -468,7 +478,16 @@ export default {
         }
 
 
-
+        // filter ------------------------------
+        const resetFilterNormal = () => {
+            console.log(true)
+            brightnessFilterValue.blur = 0;
+            brightnessFilterValue.grayScale = 0;
+            brightnessFilterValue.hueRotate = 0;
+            brightnessFilterValue.invert = 0;
+            brightnessFilterValue.saturate = 1;
+            brightnessFilterValue.sepia = 0;
+        }
 
         // about import section ------------------------------
 
@@ -542,7 +561,7 @@ export default {
         const convertor_canvas_image = () => {
             // crop btn
             const ctx = canvas.value.getContext("2d");
-            ctx.filter = `contrast(${brightnessFilterValue.contrast}%)` + `brightness(${brightnessFilterValue.brightness}%)` + `blur(${brightnessFilterValue.blur}px)`;
+            ctx.filter = `contrast(${brightnessFilterValue.contrast}%)` + `brightness(${brightnessFilterValue.brightness}%)` + `blur(${brightnessFilterValue.blur}px)` + `grayscale(${brightnessFilterValue.grayScale}%)` + `hue-rotate(${brightnessFilterValue.hueRotate}deg)` + `invert(${brightnessFilterValue.invert}%)` + `saturate(${brightnessFilterValue.saturate})` + `sepia(${brightnessFilterValue.sepia}%)`;
             fillRectFunction(ctx, 0, 0, canvasValues.widthImage, canvasValues.heightImage);
             drawImageFunction(ctx, noneShowImage.value, 0, 0, canvas.value.width, canvas.value.height);
             imageCanvas();
@@ -588,7 +607,7 @@ export default {
 
         const test2 = () => {
             // store.IsImageAvailableTrueFalseFunction(true)
-            console.log(imgSrc.value)
+
         }
         // ******************* reactivity ********************************
         watch(() => [props.status, resultImg.value, imgSrc.value], (newValS, oldValS) => {
@@ -624,6 +643,7 @@ export default {
             exportImageDownload,
             canvasDisplay,
             noneShowImageDisplayFunction,
+            resetFilterNormal,
             // --------
             test2,
             // Data
